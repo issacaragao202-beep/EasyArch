@@ -1,0 +1,16 @@
+EasyArch v5.5 — Aviso de Origem e Licenças de Terceiros (Apache License 2.0)
+
+Este repositório incorpora e adapta funcionalidades e fluxos do projeto
+`easy-arch` (https://github.com/classy-giraffe/easy-arch), licenciado sob
+a Apache License, Version 2.0 (texto integral em `LICENSE-APACHE-2.0`).
+
+Arquivos com trechos ou fluxos adaptados e modificados a partir do `easy-arch`:
+- `scripts/instalacao/easyarch-instalar-iso.sh`: detecção de microcode e
+  hypervisor/VM guest tools, seletores interativos (disco, kernel, teclado,
+  locale, rede no modo minimalista), suporte opcional a GRUB + grub-btrfs,
+  subvolumes `@root`/`@srv`, `chattr +C` em `/var/log` e configuração visual
+  do pacman — reescritos/modificados com correções de bugs e integração ao
+  ecossistema EasyArch.
+- `easy-arch.sh`: atalho raiz que delega para `scripts/instalacao/easyarch-instalar-iso.sh`.
+- `etc/pacman.d/hooks/50-bootbackup.hook`: hook de backup automático de `/boot`
+  via `rsync` em transações de kernel do pacman.

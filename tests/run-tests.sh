@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# EasyArch v5.4 — Suíte de testes anti-regressão (sem root, sem pacman)
+# EasyArch v5.5 — Suíte de testes anti-regressão (sem root, sem pacman)
 # Uso: ./tests/run-tests.sh
 # Cobre: sintaxe e permissões, classificador de risco (52 casos) + extract_base_bin,
 #        show_first_lines, easyarch-kernel-params.sh (glob, awk \a, GRUB #, fallback),
@@ -26,12 +26,12 @@ while IFS= read -r -d '' f; do
     check "bash -n $f" bash -n "$f"
     mode="$(stat -c '%a' "$f" 2>/dev/null || echo 000)"
     [[ -x "$f" || "$mode" == *7* || "$mode" == *5* ]] && pass || fail "sem +x: $f (mode=$mode)"
-done < <(find "$ROOT/scripts" "$ROOT/tests" -name '*.sh' -print0)
+done < <(find "$ROOT/easy-arch.sh" "$ROOT/scripts" "$ROOT/tests" -name '*.sh' -print0)
 
 if command -v shellcheck >/dev/null 2>&1; then
     while IFS= read -r -d '' f; do
         check "shellcheck $f" shellcheck -S warning "$f"
-    done < <(find "$ROOT/scripts" "$ROOT/tests" -name '*.sh' -print0)
+    done < <(find "$ROOT/easy-arch.sh" "$ROOT/scripts" "$ROOT/tests" -name '*.sh' -print0)
 fi
 
 if command -v python3 >/dev/null 2>&1; then
@@ -219,6 +219,70 @@ grep -q 'arch-chroot /mnt chpasswd' "$ROOT/scripts/instalacao/easyarch-instalar-
 grep -q '^jq$' "$ROOT/packages/fase2-desktop-terminal.txt" && pass || fail "jq deve estar na Fase 2 (usado pelo zoom do Hyprland)"
 grep -q 'auto_yes:-0' "$ROOT/scripts/instalacao/easyarch-setup.sh" && pass || fail "ensure_multilib deve respeitar auto_yes no modo 1 clique"
 ! bash "$ROOT/scripts/qol/easyarch-calc.sh" --eval '1/0' 2>&1 | grep -q 'Traceback' && pass || fail "easyarch-calc.sh --eval não deve expor Traceback"
+
+
+# ---------------------------------------------------------------- 15. verificações v5.5 (Fusão EasyArch + easy-arch)
+INST="$ROOT/scripts/instalacao/easyarch-instalar-iso.sh"
+bash "$ROOT/easy-arch.sh" -h 2>&1 | grep -q 'easyarch-instalar' && pass || fail "easy-arch.sh -h deve delegar para easyarch-instalar"
+
+printf 'vendor_id\t: AuthenticAMD\n' > "$T/cpu_amd"
+printf 'vendor_id\t: GenuineIntel\n' > "$T/cpu_intel"
+printf 'Hardware\t: Generic ARM\n' > "$T/cpu_arm"
+[[ "$(bash -c 'source <(sed -n "/^detect_microcode()/,/^}/p" "'"$INST"'"); detect_microcode "'"$T/cpu_amd"'"')" == "amd-ucode" ]] && pass || fail "detect_microcode AMD"
+[[ "$(bash -c 'source <(sed -n "/^detect_microcode()/,/^}/p" "'"$INST"'"); detect_microcode "'"$T/cpu_intel"'"')" == "intel-ucode" ]] && pass || fail "detect_microcode Intel"
+[[ -z "$(bash -c 'source <(sed -n "/^detect_microcode()/,/^}/p" "'"$INST"'"); detect_microcode "'"$T/cpu_arm"'"')" ]] && pass || fail "detect_microcode genérico deve retornar vazio"
+
+# detect_hypervisor não pode derrubar set -euo pipefail quando systemd-detect-virt retorna exit 1 (bare metal)
+mkdir -p "$T/fakebin"
+printf '#!/usr/bin/env bash\necho none\nexit 1\n' > "$T/fakebin/systemd-detect-virt"
+chmod +x "$T/fakebin/systemd-detect-virt"
+[[ "$(PATH="$T/fakebin:$PATH" bash -c 'set -euo pipefail; source <(sed -n "/^detect_hypervisor()/,/^}/p" "'"$INST"'"); detect_hypervisor')" == "none" ]] && pass || fail "detect_hypervisor falhou em bare metal (exit 1)"
+
+# validate_network_choice corrige bug ((1 <= x <= 5)) do easy-arch
+for ok_net in 1 2 3 4 5; do
+    bash -c 'source <(sed -n "/^validate_network_choice()/,/^}/p" "'"$INST"'"); validate_network_choice "'"$ok_net"'"' && pass || fail "validate_network_choice deve aceitar $ok_net"
+done
+for bad_net in 0 6 99 abc ""; do
+    ! bash -c 'source <(sed -n "/^validate_network_choice()/,/^}/p" "'"$INST"'"); validate_network_choice "'"$bad_net"'"' && pass || fail "validate_network_choice deve rejeitar '$bad_net'"
+done
+
+# validate_kernel_choice
+[[ "$(bash -c 'source <(sed -n "/^validate_kernel_choice()/,/^}/p" "'"$INST"'"); validate_kernel_choice 3')" == "linux-zen" ]] && pass || fail "validate_kernel_choice 3 -> linux-zen"
+! bash -c 'source <(sed -n "/^validate_kernel_choice()/,/^}/p" "'"$INST"'"); validate_kernel_choice 9' >/dev/null 2>&1 && pass || fail "validate_kernel_choice deve rejeitar 9"
+
+# configure_pacman_eye_candy idempotente
+printf '[options]\n#Color\n#ParallelDownloads = 5\n' > "$T/pacman.conf"
+bash -c 'source <(sed -n "/^configure_pacman_eye_candy()/,/^}/p" "'"$INST"'"); configure_pacman_eye_candy "'"$T/pacman.conf"'"'
+bash -c 'source <(sed -n "/^configure_pacman_eye_candy()/,/^}/p" "'"$INST"'"); configure_pacman_eye_candy "'"$T/pacman.conf"'"'
+[[ "$(grep -c '^Color$' "$T/pacman.conf")" -eq 1 && "$(grep -c '^ILoveCandy$' "$T/pacman.conf")" -eq 1 && "$(grep -c '^ParallelDownloads = 5$' "$T/pacman.conf")" -eq 1 ]] && pass || fail "configure_pacman_eye_candy deve ser idempotente"
+
+# append_grub_param preserva comentários e funciona com valor vazio ou preenchido
+printf 'GRUB_CMDLINE_LINUX="" # vazio\nGRUB_CMDLINE_LINUX_DEFAULT="quiet" # padrao\n' > "$T/grub"
+bash -c 'source <(sed -n "/^append_grub_param()/,/^}/p" "'"$INST"'"); append_grub_param "'"$T/grub"'" GRUB_CMDLINE_LINUX "cryptdevice=UUID=123:cryptroot"'
+bash -c 'source <(sed -n "/^append_grub_param()/,/^}/p" "'"$INST"'"); append_grub_param "'"$T/grub"'" GRUB_CMDLINE_LINUX_DEFAULT "zswap.enabled=0"'
+grep -q '^GRUB_CMDLINE_LINUX="cryptdevice=UUID=123:cryptroot" # vazio$' "$T/grub" && pass || fail "append_grub_param falhou em variável vazia"
+grep -q '^GRUB_CMDLINE_LINUX_DEFAULT="quiet zswap.enabled=0" # padrao$' "$T/grub" && pass || fail "append_grub_param falhou em variável preenchida"
+
+# Hook 50-bootbackup.hook, rsync, inotify-tools e btrfs-scrub único
+[[ -f "$ROOT/etc/pacman.d/hooks/50-bootbackup.hook" ]] && pass || fail "50-bootbackup.hook ausente"
+grep -q '^rsync$' "$ROOT/packages/fase1-base.txt" && pass || fail "rsync ausente em fase1-base.txt"
+grep -q 'etc/pacman.d/hooks/50-bootbackup.hook' "$ROOT/scripts/instalacao/easyarch-aplicar-etc.sh" && pass || fail "easyarch-aplicar-etc.sh deve instalar 50-bootbackup.hook"
+grep -q 'inotify-tools' "$INST" && pass || fail "modo GRUB deve instalar inotify-tools para grub-btrfsd"
+! grep -q 'btrfs-scrub@home.timer' "$INST" && grep -q 'btrfs-scrub@-.timer' "$INST" && pass || fail "deve habilitar apenas btrfs-scrub@-.timer (sem scrubs concorrentes)"
+
+# Teste end-to-end do --dry-run (determinístico com lsblk simulado: perfil completo e minimalista)
+printf '#!/usr/bin/env bash\necho "/dev/sda 240G Kingston_A400 sata"\n' > "$T/fakebin/lsblk"
+chmod +x "$T/fakebin/lsblk"
+dry_out="$(PATH="$T/fakebin:$PATH" printf '1\n\n1\n1\n1\nusuario\nsenha123\nsenha123\nn\n\n\n\nn\n' | PATH="$T/fakebin:$PATH" bash "$INST" --dry-run 2>&1)"
+grep -q '\[DRY-RUN\] Simulação concluída' <<<"$dry_out" && pass || fail "easyarch-instalar-iso.sh --dry-run (completo) falhou"
+dry_min="$(printf '2\n\n1\n3\n2\n1\nusuario\nsenha123\nsenha123\nn\n\n\n\nn\n' | PATH="$T/fakebin:$PATH" bash "$INST" --dry-run 2>&1)"
+grep -q 'GRUB + grub-btrfs' <<<"$dry_min" && grep -q 'linux-zen' <<<"$dry_min" && grep -q '\[DRY-RUN\] Simulação concluída' <<<"$dry_min" && pass || fail "easyarch-instalar-iso.sh --dry-run (minimal + GRUB + zen) falhou"
+
+
+# Conformidade Apache 2.0 (easy-arch) e consistência LUKS (encrypt + cryptdevice=, sem misturar sd-encrypt)
+[[ -f "$ROOT/LICENSE-APACHE-2.0" && -f "$ROOT/NOTICE" ]] && pass || fail "LICENSE-APACHE-2.0 e NOTICE obrigatórios"
+grep -q 'classy-giraffe/easy-arch' "$ROOT/NOTICE" && pass || fail "NOTICE deve atribuir classy-giraffe/easy-arch"
+grep -q 'block encrypt filesystems' "$INST" && grep -q 'cryptdevice=UUID=' "$INST" && ! grep -qE 'sd-encrypt|rd\.luks\.name' "$INST" && pass || fail "LUKS deve usar apenas encrypt + cryptdevice= sem misturar sd-encrypt/rd.luks.name"
 
 printf '\nTestes: %d passaram, %d falharam.\n' "$PASS" "$FAIL"
 (( FAIL == 0 ))

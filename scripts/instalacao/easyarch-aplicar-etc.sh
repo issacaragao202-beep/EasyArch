@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# EasyArch v5.4 — Aplicador Seguro de Configurações de Sistema (/etc)
+# EasyArch v5.5 — Aplicador Seguro de Configurações de Sistema (/etc)
 # Destino: scripts/instalacao/easyarch-aplicar-etc.sh
 #
 # Correções estruturais v4.4:
@@ -41,7 +41,7 @@ if [[ -d /run/systemd/system ]] && ! systemd-detect-virt --chroot >/dev/null 2>&
     IS_LIVE_SYSTEMD=1
 fi
 
-printf '=== EasyArch v5.4 — Aplicar Configurações de Sistema (/etc) ===\n'
+printf '=== EasyArch v5.5 — Aplicar Configurações de Sistema (/etc) ===\n'
 printf 'Backup automático será salvo em: %s\n' "$BACKUP_DIR"
 if (( IS_LIVE_SYSTEMD == 0 )); then
     printf '[INFO] Ambiente chroot/sem systemd detectado: serviços serão apenas habilitados para o próximo boot.\n'
@@ -66,6 +66,7 @@ mkdir -p "$BACKUP_DIR" \
          /etc/sysctl.d \
          /etc/modules-load.d \
          /etc/nftables.d \
+         /etc/pacman.d/hooks \
          /etc/default
 
 copy_with_backup() {
@@ -102,6 +103,7 @@ copy_with_backup "etc/nftables.conf"
 copy_with_backup "etc/nftables.d/00-base.nft"
 copy_with_backup "etc/nftables.d/20-waydroid.nft"
 copy_with_backup "etc/xdg/reflector/reflector.conf"
+copy_with_backup "etc/pacman.d/hooks/50-bootbackup.hook"
 
 # Validação explícita do nftables
 if command -v nft >/dev/null 2>&1; then
@@ -262,6 +264,17 @@ if systemctl list-unit-files auditd.service >/dev/null 2>&1; then
         systemctl enable --now auditd.service >/dev/null 2>&1 && printf '[OK]    auditd.service habilitado e ativo (logs AppArmor).\n' || true
     else
         systemctl enable auditd.service >/dev/null 2>&1 && printf '[OK]    auditd.service habilitado para o próximo boot.\n' || true
+    fi
+fi
+
+
+if [[ "$(findmnt -n -o FSTYPE / 2>/dev/null || true)" == "btrfs" ]] && [[ -f /usr/lib/systemd/system/btrfs-scrub@.timer ]]; then
+    if (( IS_LIVE_SYSTEMD == 1 )); then
+        systemctl enable --now btrfs-scrub@-.timer >/dev/null 2>&1 && printf '[OK]    Timer ativo: btrfs-scrub@-.timer (integridade Btrfs mensal).
+' || true
+    else
+        systemctl enable btrfs-scrub@-.timer >/dev/null 2>&1 && printf '[OK]    Habilitado para o próximo boot: btrfs-scrub@-.timer
+' || true
     fi
 fi
 

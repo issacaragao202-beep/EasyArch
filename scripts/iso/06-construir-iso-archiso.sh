@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# EasyArch v5.4 — Construtor Oficial de Imagem .ISO Bootável (via archiso)
+# EasyArch v5.5 — Construtor Oficial de Imagem .ISO Bootável (via archiso)
 # Destino: scripts/iso/06-construir-iso-archiso.sh
 #
 # Pré-requisitos (executar em um Arch Linux com acesso à internet):
@@ -50,7 +50,7 @@ cp -r /usr/share/archiso/configs/releng "$PROFILE_DIR"
 sed -i 's/^iso_name=.*/iso_name="easyarch"/' "${PROFILE_DIR}/profiledef.sh"
 sed -i 's/^iso_label=.*/iso_label="EASYARCH_$(date --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%Y%m)"/' "${PROFILE_DIR}/profiledef.sh"
 sed -i 's/^iso_publisher=.*/iso_publisher="EasyArch Project"/' "${PROFILE_DIR}/profiledef.sh"
-sed -i 's/^iso_application=.*/iso_application="EasyArch v5.4 Live\/Install ISO (Ryzen 3400G \/ Vega 11)"/' "${PROFILE_DIR}/profiledef.sh"
+sed -i 's/^iso_application=.*/iso_application="EasyArch v5.5 Live\/Install ISO (Ryzen 3400G \/ Vega 11)"/' "${PROFILE_DIR}/profiledef.sh"
 
 # 2. Habilita e valida [multilib] no pacman.conf da ISO
 awk '
@@ -183,13 +183,13 @@ for item in .config .local .gradle; do
 done
 install -m 0755 "${REPO_ROOT}/scripts/instalacao/easyarch-instalar-iso.sh" "${PROFILE_DIR}/airootfs/root/.local/bin/easyarch-instalar"
 cat >> "${PROFILE_DIR}/airootfs/root/.zprofile" <<'EOF'
-# EasyArch v5.4: garante ~/.local/bin no PATH do autologin Zsh e exibe guia rápido
+# EasyArch v5.5: garante ~/.local/bin no PATH do autologin Zsh e exibe guia rápido
 export PATH="${HOME}/.local/bin:${PATH}"
 if [[ -t 1 ]]; then
     printf '
 ====================================================================
 '
-    printf '              EasyArch v5.4 — LIVE & INSTALL ISO
+    printf '              EasyArch v5.5 — LIVE & INSTALL ISO
 '
     printf '====================================================================
 '

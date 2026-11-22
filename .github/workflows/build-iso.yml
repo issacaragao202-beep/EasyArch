@@ -1,6 +1,9 @@
 name: Build EasyArch ISO
 on:
   workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
 
 permissions:
   contents: write
@@ -32,8 +35,13 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          TAG="iso-$(date +%Y%m%d-%H%M)"
+          if [[ "${GITHUB_REF_TYPE:-}" == "tag" ]]; then
+            TAG="${GITHUB_REF_NAME}"
+            TITLE="EasyArch ${TAG} ISO"
+          else
+            TAG="iso-$(date +%Y%m%d-%H%M)"
+            TITLE="EasyArch ISO ($TAG)"
+          fi
           gh release create "$TAG" iso-out/easyarch-*.iso iso-out/easyarch-*.iso.sha256 \
-            --title "EasyArch ISO ($TAG)" \
+            --title "$TITLE" \
             --notes "Build automático via GitHub Actions."
-            

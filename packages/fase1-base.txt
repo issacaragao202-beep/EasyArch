@@ -1,5 +1,5 @@
 # ==============================================================================
-# EasyArch v5.4 — Lista Oficial de Pacotes da Fase 1 (Repositórios Oficiais Arch)
+# EasyArch v5.5 — Lista Oficial de Pacotes da Fase 1 (Repositórios Oficiais Arch)
 # Uso na Etapa 2 (pacstrap) ou pós-instalação (preserva TTY do pacman):
 #   mapfile -t pkgs < <(grep -Ev '^\s*(#|$)' packages/fase1-base.txt)
 #   sudo pacman -S --needed "${pkgs[@]}"
@@ -19,6 +19,7 @@ dosfstools
 cryptsetup
 snapper
 snap-pac
+rsync
 compsize
 smartmontools
 
