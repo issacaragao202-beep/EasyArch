@@ -1,0 +1,39 @@
+name: Build EasyArch ISO
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-iso:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Liberar espaço em disco no runner
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/lib/android /usr/share/swift /opt/hostedtoolcache/CodeQL
+          df -h
+
+      - name: Construir EasyArch ISO via archlinux container
+        run: |
+          mkdir -p "$PWD/iso-out"
+          docker run --rm --privileged \
+            -v "$PWD:/repo" \
+            -v "$PWD/iso-out:/var/tmp/build-easyarch-iso/out" \
+            archlinux:latest bash -euo pipefail -c '
+              pacman -Syu --noconfirm archiso
+              cd /repo
+              EASYARCH_ISO_BUILD_DIR=/var/tmp/build-easyarch-iso ./scripts/iso/06-construir-iso-archiso.sh
+            '
+
+      - name: Publicar ISO em Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="iso-$(date +%Y%m%d-%H%M)"
+          gh release create "$TAG" iso-out/easyarch-*.iso iso-out/easyarch-*.iso.sha256 \
+            --title "EasyArch ISO ($TAG)" \
+            --notes "Build automático via GitHub Actions."
+            
