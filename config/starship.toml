@@ -1,0 +1,30 @@
+# ==============================================================================
+# EasyArch — Starship Prompt (Minimalista Prata e Ciano Glacial)
+# Destino: ~/.config/starship.toml
+# ==============================================================================
+
+add_newline = false
+format = "$directory$git_branch$git_status$cmd_duration$character"
+
+[directory]
+style = "bold #7dd3fc"
+truncation_length = 3
+truncate_to_repo = true
+
+[git_branch]
+symbol = "git:"
+style = "bold #c9d4e0"
+format = "[$symbol$branch]($style) "
+
+[git_status]
+style = "#94a3b8"
+format = "([$all_status$ahead_behind]($style) )"
+
+[cmd_duration]
+min_time = 2000
+style = "#94a3b8"
+format = "[$duration]($style) "
+
+[character]
+success_symbol = "[❯](bold #7dd3fc)"
+error_symbol = "[❯](bold #f87171)"

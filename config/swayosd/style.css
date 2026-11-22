@@ -1,0 +1,31 @@
+/* ============================================================================
+ * EasyArch v5.4 — SwayOSD (Indicador Translúcido de Volume / CapsLock)
+ * Destino: ~/.config/swayosd/style.css
+ * ============================================================================ */
+
+window#osd {
+    border-radius: 999px;
+    border: 1.5px solid rgba(125, 211, 252, 0.48);
+    background: rgba(7, 12, 20, 0.84);
+}
+
+window#osd #container {
+    margin: 12px 20px;
+}
+
+window#osd image,
+window#osd label {
+    color: #f1f7fc;
+}
+
+window#osd progressbar trough {
+    min-height: 8px;
+    border-radius: 999px;
+    background: rgba(201, 212, 224, 0.18);
+}
+
+window#osd progressbar progress {
+    min-height: 8px;
+    border-radius: 999px;
+    background: #7dd3fc;
+}

@@ -1,0 +1,16 @@
+# ==============================================================================
+# EasyArch v5.4 — Regras Modulares nftables para Waydroid (tabela easyarch_filter)
+# Destino: /etc/nftables.d/20-waydroid.nft
+# ==============================================================================
+
+table inet easyarch_filter {
+    chain input {
+        iifname "waydroid0" udp dport { 53, 67 } accept comment "waydroid dns/dhcp"
+        iifname "waydroid0" tcp dport 53 accept comment "waydroid dns tcp"
+    }
+
+    chain forward {
+        iifname "waydroid0" accept comment "waydroid egress"
+        oifname "waydroid0" ct state established,related accept comment "waydroid return"
+    }
+}

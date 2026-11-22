@@ -1,0 +1,20 @@
+# ==============================================================================
+# EasyArch — Mako (Notificações Wayland Leves · Glacial Silver)
+# Destino: ~/.config/mako/config
+# ==============================================================================
+
+font=JetBrainsMono Nerd Font 11
+background-color=#070c14cc
+text-color=#f1f7fc
+border-color=#7dd3fc99
+border-size=1
+border-radius=16
+padding=10
+margin=12
+width=340
+default-timeout=4500
+max-visible=3
+
+[urgency=high]
+border-color=#f87171cc
+default-timeout=0

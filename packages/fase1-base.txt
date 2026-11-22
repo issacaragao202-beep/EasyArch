@@ -1,0 +1,53 @@
+# ==============================================================================
+# EasyArch v5.4 — Lista Oficial de Pacotes da Fase 1 (Repositórios Oficiais Arch)
+# Uso na Etapa 2 (pacstrap) ou pós-instalação (preserva TTY do pacman):
+#   mapfile -t pkgs < <(grep -Ev '^\s*(#|$)' packages/fase1-base.txt)
+#   sudo pacman -S --needed "${pkgs[@]}"
+# ==============================================================================
+
+# --- Base do Sistema e Kernel ---
+base
+base-devel
+linux
+linux-headers
+linux-firmware
+amd-ucode
+
+# --- Sistema de Arquivos, Btrfs, LUKS2 e SSD ---
+btrfs-progs
+dosfstools
+cryptsetup
+snapper
+snap-pac
+compsize
+smartmontools
+
+# --- Gerenciamento de Memória e Monitoramento ---
+zram-generator
+earlyoom
+lm_sensors
+sysstat
+
+# --- Rede e Segurança em Camadas ---
+networkmanager
+nftables
+apparmor
+audit
+ca-certificates
+
+# --- Utilitários Essenciais de Manutenção e Diagnóstico ---
+git
+vim
+nano
+man-db
+man-pages
+util-linux
+pciutils
+usbutils
+lsof
+htop
+pacman-contrib
+reflector
+exfatprogs
+ntfs-3g
+xdg-user-dirs

@@ -1,0 +1,16 @@
+# ==============================================================================
+# EasyArch v5.4 — Configuração do earlyoom (Sintaxe Upstream Corrigida)
+# Destino: /etc/default/earlyoom
+#
+# Correções estruturais v4.1–v4.3:
+#   - Sem aspas internas nem espaços dentro de EARLYOOM_ARGS (evita quebra de
+#     argumentos quando systemd expande $EARLYOOM_ARGS).
+#   - Protege hyprpolkitagent e pipewire-pulse (comm tem limite de 15 chars no Linux).
+#   - Nota técnica: earlyoom casa regex contra /proc/<pid>/comm (nunca contém '/').
+#     O Gradle executa dentro de processos com comm="java" (mesmo comm do Minecraft),
+#     por isso "java" não é protegido globalmente para não impedir o OOM killer em
+#     caso de vazamento de memória em jogos; o heap do Gradle já é limitado em 2 GiB
+#     via ~/.gradle/gradle.properties.
+# ==============================================================================
+
+EARLYOOM_ARGS=-r 0 -m 8,4 -s 10,5 --avoid ^(systemd|init|Hyprland|Xwayland|NetworkManager|dbus-daemon|dbus-broker|foot|waybar|swaync|pipewire|pipewire-pulse|wireplumber|hyprpolkitagent|sshd|javac|gcc|clang|cc1|cc1plus|ld|code)$ --prefer ^(Web|Isolated|chrome|chromium|brave|firefox|electron)

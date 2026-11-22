@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=EasyArch — Executar App Windows (Seguro)
+Comment=Confirma hash e isola prefixo antes de executar arquivos .exe ou .msi
+Exec=/usr/bin/env bash -c 'exec "$HOME/.local/bin/easyarch-win-run.sh" -- "$1"' _ %f
+Icon=application-x-ms-dos-executable
+Terminal=false
+NoDisplay=false
+MimeType=application/x-ms-dos-executable;application/x-msi;application/x-msdownload;
+Categories=Utility;

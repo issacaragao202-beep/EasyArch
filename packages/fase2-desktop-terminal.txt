@@ -1,0 +1,78 @@
+# ==============================================================================
+# EasyArch v5.4 — Pacotes Oficiais da Fase 2 (Ultra-Leve + Glacial Silver)
+# Instalação (preserva TTY do pacman; requer [multilib] habilitado):
+#   mapfile -t pkgs < <(grep -Ev '^\s*(#|$)' packages/fase2-desktop-terminal.txt)
+#   sudo pacman -S --needed "${pkgs[@]}"
+# ==============================================================================
+
+# --- Pilha Gráfica AMD (Vega 11: AMDGPU + Mesa + RADV) ---
+mesa
+vulkan-radeon
+vulkan-icd-loader
+vulkan-tools
+libva-utils
+lib32-mesa
+lib32-vulkan-radeon
+lib32-vulkan-icd-loader
+
+# --- Wayland, Hyprland Ultra-Leve e Portais (substitui polkit-kde por hyprpolkitagent) ---
+hyprland
+hyprpolkitagent
+hyprlock
+hypridle
+swaybg
+xdg-desktop-portal
+xdg-desktop-portal-hyprland
+xdg-desktop-portal-gtk
+qt5-wayland
+qt6-wayland
+
+# --- Interface Glacial Silver ---
+waybar
+nwg-dock-hyprland
+rofi
+swaync
+swayosd
+btop
+libnotify
+wl-clipboard
+grim
+slurp
+fd
+ttf-jetbrains-mono-nerd
+noto-fonts
+noto-fonts-emoji
+
+# --- Áudio (PipeWire + WirePlumber) ---
+pipewire
+pipewire-alsa
+pipewire-pulse
+pipewire-jack
+wireplumber
+
+# --- Terminal Inteligente ---
+foot
+fish
+starship
+fzf
+zoxide
+tealdeer
+pkgfile
+
+# ==============================================================================
+# PACOTE OPCIONAL DO AUR (revisar PKGBUILD antes):
+#   pay-respects-bin  (https://aur.archlinux.org/packages/pay-respects-bin)
+# ==============================================================================
+
+# --- QoL Real para Iniciantes (Arquivos, Auto-Mount Pendrive USB e Histórico Ctrl+C) ---
+thunar
+gvfs
+udiskie
+libappindicator
+cliphist
+librsvg
+pavucontrol
+network-manager-applet
+playerctl
+xdg-utils
+jq

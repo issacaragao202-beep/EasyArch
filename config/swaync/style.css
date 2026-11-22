@@ -1,0 +1,52 @@
+/* ============================================================================
+ * EasyArch v5.4 — SwayNC Control Center (Vidro Translúcido Glacial HUD)
+ * Destino: ~/.config/swaync/style.css
+ * ============================================================================ */
+
+* {
+    font-family: "JetBrainsMono Nerd Font", "Noto Sans", sans-serif;
+    font-size: 12px;
+}
+
+.control-center {
+    background: rgba(7, 12, 20, 0.84);
+    border: 1px solid rgba(125, 211, 252, 0.38);
+    border-radius: 22px;
+    padding: 12px;
+    color: #f1f7fc;
+}
+
+.notification-row .notification-background .notification {
+    background: rgba(12, 19, 30, 0.88);
+    border: 1px solid rgba(125, 211, 252, 0.30);
+    border-radius: 16px;
+    padding: 8px;
+    color: #f1f7fc;
+}
+
+.notification.critical {
+    border-color: rgba(248, 113, 113, 0.70);
+}
+
+.widget-title,
+.widget-dnd,
+.widget-mpris,
+.widget-volume {
+    background: rgba(16, 25, 38, 0.76);
+    border: 1px solid rgba(125, 211, 252, 0.22);
+    border-radius: 14px;
+    padding: 8px 12px;
+    margin: 6px 0;
+}
+
+.widget-title > button {
+    border-radius: 999px;
+    background: rgba(125, 211, 252, 0.18);
+    color: #7dd3fc;
+    border: 1px solid rgba(125, 211, 252, 0.45);
+    padding: 4px 12px;
+}
+
+.widget-dnd > switch:checked {
+    background: #7dd3fc;
+}

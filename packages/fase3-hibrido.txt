@@ -1,0 +1,38 @@
+# ==============================================================================
+# EasyArch v5.4 — Pacotes Oficiais da Fase 3 (Compatibilidade Híbrida e Sandbox)
+# Instalação (preserva TTY do pacman; requer [multilib] habilitado):
+#   mapfile -t pkgs < <(grep -Ev '^\s*(#|$)' packages/fase3-hibrido.txt)
+#   sudo pacman -S --needed "${pkgs[@]}"
+# ==============================================================================
+
+# --- Sandboxing e Portais Linux ---
+flatpak
+bubblewrap
+fuse2
+
+# --- Camada Windows (Wine + Bibliotecas 32/64 bits + Jogos) ---
+wine
+winetricks
+zenity
+steam
+lutris
+gamescope
+gamemode
+lib32-gamemode
+lib32-gnutls
+lib32-libpulse
+lib32-pipewire
+lib32-gst-plugins-base-libs
+lib32-gst-plugins-good
+lib32-vkd3d
+vkd3d
+
+# ==============================================================================
+# FLATPAKS RECOMENDADOS (escopo --user, via Flathub):
+#   com.usebottles.bottles        # Gerenciador isolado de apps Windows desktop
+#   com.github.tchx84.Flatseal    # Controle visual de permissões Flatpak
+#   net.davidotek.pupgui2         # ProtonUp-Qt (instalação de Proton-GE)
+#
+# PACOTE AUR (revisar PKGBUILD antes de instalar):
+#   waydroid                      # Container Android sobre Wayland
+# ==============================================================================

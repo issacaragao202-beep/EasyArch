@@ -1,0 +1,97 @@
+/* ============================================================================
+ * EasyArch v5.4 — Tema Rofi Glacial HUD (Cápsula Translúcida Central)
+ * Destino: ~/.config/rofi/glacial-silver.rasi
+ * ============================================================================ */
+
+* {
+    bg:          #070c14cc;
+    bg-pill:     #101926d9;
+    fg:          #c9d4e0;
+    fg-bright:   #f1f7fc;
+    accent:      #7dd3fc;
+    accent-soft: #7dd3fc26;
+    border-col:  #7dd3fc4d;
+    background-color: transparent;
+    text-color: @fg;
+}
+
+window {
+    location: center;
+    anchor: center;
+    width: 600px;
+    background-color: @bg;
+    border: 1.5px solid;
+    border-color: @border-col;
+    border-radius: 28px;
+    padding: 18px;
+}
+
+mainbox {
+    spacing: 12px;
+    children: [ inputbar, listview, mode-switcher ];
+}
+
+inputbar {
+    background-color: @bg-pill;
+    border: 1.5px solid;
+    border-color: @accent;
+    border-radius: 999px;
+    padding: 12px 18px;
+    spacing: 10px;
+    children: [ prompt, entry ];
+}
+
+prompt {
+    text-color: @accent;
+    font: "JetBrainsMono Nerd Font Bold 12";
+}
+
+entry {
+    text-color: @fg-bright;
+    placeholder: "Pesquisar apps, comandos ou arquivos...";
+    placeholder-color: #7c90a8;
+}
+
+listview {
+    lines: 7;
+    columns: 1;
+    spacing: 6px;
+    scrollbar: false;
+    fixed-height: false;
+}
+
+element {
+    padding: 10px 14px;
+    border-radius: 16px;
+    spacing: 12px;
+}
+
+element selected.normal {
+    background-color: @accent-soft;
+    text-color: @fg-bright;
+    border: 1px solid;
+    border-color: #7dd3fc77;
+}
+
+element-icon {
+    size: 28px;
+}
+
+mode-switcher {
+    spacing: 10px;
+}
+
+button {
+    padding: 8px 14px;
+    border-radius: 999px;
+    background-color: @bg-pill;
+    text-color: @fg;
+    border: 1px solid;
+    border-color: #2c364599;
+}
+
+button selected {
+    background-color: #7dd3fc30;
+    text-color: @accent;
+    border-color: @accent;
+}

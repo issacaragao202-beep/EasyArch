@@ -1,0 +1,18 @@
+/* ============================================================================
+ * EasyArch — Rofi Wayland (Lançador Central estilo Spotlight)
+ * Destino: ~/.config/rofi/config.rasi
+ * ============================================================================ */
+
+configuration {
+    modes: "drun,run,filebrowser";
+    font: "JetBrainsMono Nerd Font 12";
+    show-icons: true;
+    display-drun: "Apps";
+    display-run: "Cmd";
+    display-filebrowser: "Arquivos";
+    drun-display-format: "{name}";
+    disable-history: false;
+    sorting-method: "fzf";
+}
+
+@theme "~/.config/rofi/glacial-silver.rasi"

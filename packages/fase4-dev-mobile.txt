@@ -1,0 +1,40 @@
+# ==============================================================================
+# EasyArch v5.4 — Pacotes Oficiais da Fase 4 (Desenvolvimento, Mobile e Benchmarks)
+# Instalação (preserva TTY do pacman):
+#   mapfile -t pkgs < <(grep -Ev '^\s*(#|$)' packages/fase4-dev-mobile.txt)
+#   sudo pacman -S --needed "${pkgs[@]}"
+# ==============================================================================
+
+# --- Compiladores e Toolchain (git já incluído na Fase 1) ---
+gcc
+clang
+mingw-w64-gcc
+cmake
+make
+pkgconf
+
+# --- Linguagens e Build (inclui Java 17 para Minecraft 1.20.1 / Fabric / ArcForge) ---
+jdk17-openjdk
+gradle
+python
+python-pipx
+nodejs
+npm
+
+# --- Cofre Seguro de Chaves de API ---
+pass
+gnupg
+libsecret
+
+# --- Integração Smartphone Android (USB / Termux Offload) ---
+android-tools
+android-udev
+scrcpy
+openssh
+rsync
+
+# --- Perfis de Desempenho e Benchmarks ---
+cpupower
+mangohud
+lib32-mangohud
+hyperfine

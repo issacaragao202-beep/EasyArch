@@ -1,0 +1,113 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 34,
+  "spacing": 6,
+  "modules-left": [
+    "custom/easyarch",
+    "hyprland/workspaces",
+    "hyprland/window"
+  ],
+  "modules-center": [
+    "clock"
+  ],
+  "modules-right": [
+    "custom/security",
+    "cpu",
+    "memory",
+    "temperature",
+    "network",
+    "wireplumber",
+    "tray",
+    "custom/notifications",
+    "custom/power"
+  ],
+  "custom/easyarch": {
+    "format": "EasyArch",
+    "tooltip-format": "Clique para abrir a Central EasyArch (SUPER + H)",
+    "on-click": "$HOME/.local/bin/easyarch"
+  },
+  "hyprland/workspaces": {
+    "format": "{id}",
+    "on-click": "activate"
+  },
+  "hyprland/window": {
+    "max-length": 38,
+    "separate-outputs": true
+  },
+  "clock": {
+    "interval": 30,
+    "format": "{:%a %d/%m  %H:%M}",
+    "tooltip-format": "<tt>{calendar}</tt>"
+  },
+  "custom/security": {
+    "exec": "$HOME/.local/bin/security-status.sh",
+    "return-type": "json",
+    "interval": 60,
+    "format": "{}",
+    "on-click": "foot --title='EasyArch — Segurança' -e bash -lc '$HOME/.local/bin/easyarch seguranca; echo \"\"; read -n 1 -r -p \"Pressione qualquer tecla...\"'"
+  },
+  "cpu": {
+    "interval": 5,
+    "format": "CPU {usage}%",
+    "on-click": "foot --title='EasyArch — Monitor btop' -e btop",
+    "tooltip-format": "Uso de CPU (clique para abrir btop)"
+  },
+  "memory": {
+    "interval": 5,
+    "format": "RAM {used:0.1f}G/{total:0.1f}G",
+    "tooltip-format": "Disponível: {avail:0.2f} GiB | ZRAM: {swapUsed:0.2f}/{swapTotal:0.2f} GiB (clique para detalhes)",
+    "on-click": "foot --title='EasyArch — Memória' -e bash -lc '$HOME/.local/bin/01-relatorio-memoria.sh --show waybar; echo \"\"; read -n 1 -r -p \"Pressione qualquer tecla...\"'"
+  },
+  "temperature": {
+    "interval": 10,
+    "critical-threshold": 82,
+    "format": "{temperatureC}°C"
+  },
+  "network": {
+    "interval": 10,
+    "format-wifi": "Wi-Fi {signalStrength}%",
+    "format-ethernet": "ETH",
+    "format-disconnected": "Offline",
+    "tooltip-format": "{ifname}: {ipaddr} (clique para configurar Wi-Fi)",
+    "on-click": "$HOME/.local/bin/easyarch-rede.sh"
+  },
+  "wireplumber": {
+    "format": "VOL {volume}%",
+    "format-muted": "MUDO",
+    "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    "on-scroll-up": "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+",
+    "on-scroll-down": "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%-",
+    "on-click-right": "pavucontrol",
+    "tooltip-format": "Volume: {volume}% (clique esquerdo: mudo | direito: mixer)"
+  },
+  "tray": {
+    "icon-size": 15,
+    "spacing": 8
+  },
+  "custom/power": {
+    "format": "⏻",
+    "tooltip-format": "Bloquear, Suspender, Reiniciar ou Desligar (SUPER + Backspace)",
+    "on-click": "$HOME/.local/bin/easyarch-power.sh"
+  },
+  "margin-top": 6,
+  "margin-left": 10,
+  "margin-right": 10,
+  "custom/notifications": {
+    "tooltip": true,
+    "tooltip-format": "Central de Notificações e Controles (SUPER + N)",
+    "format": "HUD {icon}",
+    "format-icons": {
+      "notification": "●",
+      "none": "○",
+      "dnd-notification": "⊘",
+      "dnd-none": "⊘"
+    },
+    "return-type": "json",
+    "exec-if": "command -v swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true
+  }
+}

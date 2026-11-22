@@ -1,0 +1,2 @@
+# Placeholder modular do EasyArch para garantir que include "/etc/nftables.d/*.nft"
+# nunca falhe mesmo antes de instalar regras opcionais (como 20-waydroid.nft).
